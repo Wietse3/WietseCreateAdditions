@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "me.wietse3.wca.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "create.GirderBlockMixin",
+    "create.GirderCTBehaviourMixin",
+    "create.ShaftBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

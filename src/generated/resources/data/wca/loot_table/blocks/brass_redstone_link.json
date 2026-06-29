@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "wca:brass_redstone_link"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "wca:blocks/brass_redstone_link"
+}

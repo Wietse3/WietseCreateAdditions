@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "wca:brass_redstone_link"
+    },
+    "S": {
+      "tag": "minecraft:wooden_buttons"
+    }
+  },
+  "pattern": [
+    "SSS",
+    " P ",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "wca:brass_linked_controller"
+  }
+}
