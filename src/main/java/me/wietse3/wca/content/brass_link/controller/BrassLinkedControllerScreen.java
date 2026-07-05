@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import me.wietse3.wca.registry.WCAGuiTextures;
+import me.wietse3.wca.registry.WCAPackets;
 import me.wietse3.wca.util.ExtendedControlsUtil;
 import me.wietse3.wca.registry.WCALang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
@@ -121,8 +122,6 @@ public class BrassLinkedControllerScreen extends AbstractSimiScreen {
             binds.add(new BrassControllerBind(inputs[i].getValue(), powers[i].getState()));
         }
 
-        int slot = minecraft.player.getInventory().selected;
-        CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerScreenPacket(slot, binds));
-
+        WCAPackets.getChannel().sendToServer(new BrassLinkedControllerScreenPacket(binds));
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,19 +26,18 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class ShaftBlockMixin {
 
     @Inject(
-            method = "useItemOn",
+            method = "use",
             at = @At("HEAD"),
             cancellable = true
     )
     private void wca$encaseVerticalShaft(
-            ItemStack stack,
             BlockState state,
             Level level,
             BlockPos pos,
             Player player,
             InteractionHand hand,
             BlockHitResult hit,
-            CallbackInfoReturnable<ItemInteractionResult> cir
+            CallbackInfoReturnable<InteractionResult> cir
     ) {
         if (player == null)
             return;
@@ -46,6 +45,7 @@ public class ShaftBlockMixin {
         if (player.isShiftKeyDown() || !player.mayBuild())
             return;
 
+        ItemStack stack = player.getItemInHand(hand);
         if (!AllBlocks.METAL_GIRDER.isIn(stack) || state.getValue(ShaftBlock.AXIS) != Direction.Axis.Y)
             return;
 
@@ -59,7 +59,7 @@ public class ShaftBlockMixin {
                 player.setItemInHand(hand, ItemStack.EMPTY);
         }
 
-        cir.setReturnValue(ItemInteractionResult.SUCCESS);
+        cir.setReturnValue(InteractionResult.SUCCESS);
     }
 }
 

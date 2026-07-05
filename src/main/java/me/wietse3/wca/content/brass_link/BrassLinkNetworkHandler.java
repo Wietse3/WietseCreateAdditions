@@ -1,9 +1,6 @@
 package me.wietse3.wca.content.brass_link;
 
 import com.simibubi.create.infrastructure.config.AllConfigs;
-import dev.ryanhcode.sable.companion.SableCompanion;
-import dev.ryanhcode.sable.companion.SubLevelAccess;
-import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import me.wietse3.wca.WietseCreateAdditions;
 import net.createmod.catnip.levelWrappers.WorldHelper;
 import net.minecraft.world.level.Level;
@@ -65,7 +62,7 @@ public class BrassLinkNetworkHandler {
                 continue;
             }
 
-            if (!withinRange(actor, other, world))
+            if (!withinRange(actor, other))
                 continue;
 
             if (power < 15)
@@ -81,31 +78,16 @@ public class BrassLinkNetworkHandler {
         }
 
         for (IBrassLinkable other : network) {
-            if (other != actor && other.isListening() && withinRange(actor, other, world))
+            if (other != actor && other.isListening() && withinRange(actor, other))
                 other.setReceivedStrength(power);
         }
     }
 
-    public static boolean withinRange(IBrassLinkable from, IBrassLinkable to, LevelAccessor levelAccessor) {
-        Level level = (Level) levelAccessor;
-
-        if (from == to) return true;
-
-        Vector3d fromPos = JOMLConversion.atCenterOf(from.getLocation());
-        Vector3d toPos = JOMLConversion.atCenterOf(to.getLocation());
-
-        SubLevelAccess fromSublevel = SableCompanion.INSTANCE.getContaining(level, fromPos);
-        if (fromSublevel != null) {
-            fromSublevel.logicalPose().transformPosition(fromPos);
-        }
-
-        SubLevelAccess toSublevel = SableCompanion.INSTANCE.getContaining(level, toPos);
-        if (toSublevel != null) {
-            toSublevel.logicalPose().transformPosition(toPos);
-        }
-
-        int linkRange = AllConfigs.server().logistics.linkRange.get();
-        return fromPos.distanceSquared(toPos) < linkRange * linkRange;
+    public static boolean withinRange(IBrassLinkable from, IBrassLinkable to) {
+        if (from == to)
+            return true;
+        return from.getLocation()
+                .closerThan(to.getLocation(), AllConfigs.server().logistics.linkRange.get());
     }
 
     public Map<String, Set<IBrassLinkable>> networksIn(LevelAccessor world) {

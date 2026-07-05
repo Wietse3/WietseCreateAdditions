@@ -1,32 +1,38 @@
 package me.wietse3.wca.content.brass_link.controller;
 
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import io.netty.buffer.ByteBuf;
-import me.wietse3.wca.registry.WCADataComponents;
-import me.wietse3.wca.registry.WCAPackets;
 import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
 public class BrassLinkedControllerBindPacket extends BrassLinkedControllerPacketBase {
-    public static final StreamCodec<ByteBuf, BrassLinkedControllerBindPacket> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, p -> p.button,
-            BlockPos.STREAM_CODEC, p -> p.linkLocation,
-            BrassLinkedControllerBindPacket::new
-    );
 
     private final int button;
     private final BlockPos linkLocation;
 
     public BrassLinkedControllerBindPacket(int button, BlockPos linkLocation) {
-        super(null);
+        super((BlockPos) null);
         this.button = button;
         this.linkLocation = linkLocation;
+    }
+
+    public BrassLinkedControllerBindPacket(FriendlyByteBuf buffer) {
+        super(buffer);
+        this.button = buffer.readVarInt();
+        this.linkLocation = buffer.readBlockPos();
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buffer) {
+        super.write(buffer);
+        buffer.writeVarInt(button);
+        buffer.writeBlockPos(linkLocation);
     }
 
     @Override
@@ -40,14 +46,11 @@ public class BrassLinkedControllerBindPacket extends BrassLinkedControllerPacket
             return;
 
         binds.set(button, new BrassControllerBind(link.getNetworkKey()));
-        heldItem.set(WCADataComponents.BRASS_LINKED_CONTROLLER_LINKS, binds);
+        heldItem.getOrCreateTag().put("BrassLinkedControllerLinks", BrassControllerBind.CODEC.listOf()
+                .encodeStart(NbtOps.INSTANCE, binds).result().orElse(new ListTag()));
     }
 
     @Override
     protected void handleLectern(ServerPlayer player, LecternBrassControllerBlockEntity lectern) {}
 
-    @Override
-    public PacketTypeProvider getTypeProvider() {
-        return WCAPackets.BRASS_LINKED_CONTROLLER_BIND;
-    }
 }

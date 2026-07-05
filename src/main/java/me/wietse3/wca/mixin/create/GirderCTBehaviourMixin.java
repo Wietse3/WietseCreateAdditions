@@ -17,7 +17,8 @@ public class GirderCTBehaviourMixin {
     @Inject(
             method = "connectsTo",
             at = @At("HEAD"),
-            cancellable = true
+            cancellable = true,
+            remap = false
     )
     private void wca$connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos,
                                 BlockPos otherPos, Direction face, CallbackInfoReturnable<Boolean> cir) {

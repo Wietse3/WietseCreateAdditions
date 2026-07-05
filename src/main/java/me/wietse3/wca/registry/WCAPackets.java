@@ -1,48 +1,98 @@
 package me.wietse3.wca.registry;
 
+import com.simibubi.create.foundation.networking.SimplePacketBase;
 import me.wietse3.wca.WietseCreateAdditions;
 import me.wietse3.wca.content.brass_link.BrassLinkConfigurePacket;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerBindPacket;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerInputPacket;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerScreenPacket;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerStopLecternPacket;
-import net.createmod.catnip.net.base.BasePacketPayload;
-import net.createmod.catnip.net.base.CatnipPacketRegistry;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.Locale;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
-public enum WCAPackets implements BasePacketPayload.PacketTypeProvider {
+import static net.minecraftforge.network.NetworkDirection.PLAY_TO_SERVER;
+
+public enum WCAPackets {
     // Client to Server
-    BRASS_REDSTONE_LINK_CONFIGURE(BrassLinkConfigurePacket.class, BrassLinkConfigurePacket.CODEC),
-    BRASS_LINKED_CONTROLLER_INPUT(BrassLinkedControllerInputPacket.class, BrassLinkedControllerInputPacket.STREAM_CODEC),
-    BRASS_LINKED_CONTROLLER_BIND(BrassLinkedControllerBindPacket.class, BrassLinkedControllerBindPacket.STREAM_CODEC),
-    BRASS_LINKED_CONTROLLER_STOP_LECTERN(BrassLinkedControllerStopLecternPacket.class, BrassLinkedControllerStopLecternPacket.STREAM_CODEC),
-    BRASS_LINKED_CONTROLLER_SCREEN(BrassLinkedControllerScreenPacket .class, BrassLinkedControllerScreenPacket.STREAM_CODEC);
+    BRASS_REDSTONE_LINK_CONFIGURE(BrassLinkConfigurePacket.class, BrassLinkConfigurePacket::new, PLAY_TO_SERVER),
+    BRASS_LINKED_CONTROLLER_INPUT(BrassLinkedControllerInputPacket.class, BrassLinkedControllerInputPacket::new, PLAY_TO_SERVER),
+    BRASS_LINKED_CONTROLLER_BIND(BrassLinkedControllerBindPacket.class, BrassLinkedControllerBindPacket::new, PLAY_TO_SERVER),
+    BRASS_LINKED_CONTROLLER_STOP_LECTERN(BrassLinkedControllerStopLecternPacket.class, BrassLinkedControllerStopLecternPacket::new, PLAY_TO_SERVER),
+    BRASS_LINKED_CONTROLLER_SCREEN(BrassLinkedControllerScreenPacket.class, BrassLinkedControllerScreenPacket::new, PLAY_TO_SERVER);
 
-    private final CatnipPacketRegistry.PacketType<?> type;
+    public static final ResourceLocation CHANNEL_NAME = WietseCreateAdditions.asResource("main");
+    public static final int NETWORK_VERSION = 3;
+    public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
+    private static SimpleChannel channel;
 
-    <T extends BasePacketPayload> WCAPackets(Class<T> clazz, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
-        String name = this.name().toLowerCase(Locale.ROOT);
-        this.type = new CatnipPacketRegistry.PacketType<>(
-                new CustomPacketPayload.Type<>(WietseCreateAdditions.asResource(name)),
-                clazz, codec
-        );
+    private PacketType<?> packetType;
+
+    <T extends SimplePacketBase> WCAPackets(Class<T> type, Function<FriendlyByteBuf, T> factory,
+                                            NetworkDirection direction) {
+        packetType = new PacketType<>(type, factory, direction);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T extends CustomPacketPayload> CustomPacketPayload.Type<T> getType() {
-        return (CustomPacketPayload.Type<T>) this.type.type();
+    public static void registerPackets() {
+        channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
+                .serverAcceptedVersions(NETWORK_VERSION_STR::equals)
+                .clientAcceptedVersions(NETWORK_VERSION_STR::equals)
+                .networkProtocolVersion(() -> NETWORK_VERSION_STR)
+                .simpleChannel();
+
+        for (WCAPackets packet : values())
+            packet.packetType.register();
     }
 
-    public static void register() {
-        CatnipPacketRegistry packetRegistry = new CatnipPacketRegistry(WietseCreateAdditions.MODID, 1);
-        for (WCAPackets packet : WCAPackets.values()) {
-            packetRegistry.registerPacket(packet.type);
+    public static SimpleChannel getChannel() {
+        return channel;
+    }
+
+    public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
+        getChannel().send(
+                PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())),
+                message);
+    }
+
+    private static class PacketType<T extends SimplePacketBase> {
+        private static int index = 0;
+
+        private BiConsumer<T, FriendlyByteBuf> encoder;
+        private Function<FriendlyByteBuf, T> decoder;
+        private BiConsumer<T, Supplier<Context>> handler;
+        private Class<T> type;
+        private NetworkDirection direction;
+
+        private PacketType(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
+            encoder = T::write;
+            decoder = factory;
+            handler = (packet, contextSupplier) -> {
+                Context context = contextSupplier.get();
+                if (packet.handle(context)) {
+                    context.setPacketHandled(true);
+                }
+            };
+            this.type = type;
+            this.direction = direction;
         }
-        packetRegistry.registerAllPackets();
+
+        private void register() {
+            getChannel().messageBuilder(type, index++, direction)
+                    .encoder(encoder)
+                    .decoder(decoder)
+                    .consumerNetworkThread(handler)
+                    .add();
+        }
     }
 }

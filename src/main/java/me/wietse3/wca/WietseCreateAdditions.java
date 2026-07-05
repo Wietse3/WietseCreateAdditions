@@ -8,14 +8,14 @@ import me.wietse3.wca.content.brass_link.BrassLinkNetworkHandler;
 import me.wietse3.wca.registry.*;
 import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
-import net.neoforged.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod;
 
 import static me.wietse3.wca.registry.WCACreativeTabs.BASE_CREATIVE_TAB;
 
@@ -33,7 +33,9 @@ public class WietseCreateAdditions {
 
     public static final BrassLinkNetworkHandler BRASS_LINK_NETWORK_HANDLER = new BrassLinkNetworkHandler();
 
-    public WietseCreateAdditions(IEventBus modEventBus, ModContainer modContainer) {
+    public WietseCreateAdditions() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         REGISTRATE.registerEventListeners(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
@@ -42,8 +44,7 @@ public class WietseCreateAdditions {
         WCABlockEntityTypes.register();
         WCAItems.register();
         WCACreativeTabs.register(modEventBus);
-        WCADataComponents.register(modEventBus);
-        WCAPackets.register();
+        WCAPackets.registerPackets();
         WCALang.register();
     }
 

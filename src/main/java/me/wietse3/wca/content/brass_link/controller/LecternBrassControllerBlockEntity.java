@@ -3,21 +3,18 @@ package me.wietse3.wca.content.brass_link.controller;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import dev.ryanhcode.sable.companion.SableCompanion;
-import me.wietse3.wca.registry.WCADataComponents;
 import me.wietse3.wca.registry.WCAItems;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -25,8 +22,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +45,8 @@ public class LecternBrassControllerBlockEntity extends SmartBlockEntity {
     }
 
     @Override
-    protected void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(compound, registries, clientPacket);
+    protected void write(CompoundTag compound, boolean clientPacket) {
+        super.write(compound, clientPacket);
 
         ListTag list = new ListTag();
         for (BrassControllerBind bind : binds) {
@@ -64,8 +62,8 @@ public class LecternBrassControllerBlockEntity extends SmartBlockEntity {
     }
 
     @Override
-    public void writeSafe(CompoundTag compound, HolderLookup.Provider registries) {
-        super.writeSafe(compound, registries);
+    public void writeSafe(CompoundTag compound) {
+        super.writeSafe(compound);
 
         ListTag list = new ListTag();
         for (BrassControllerBind bind : binds) {
@@ -78,8 +76,8 @@ public class LecternBrassControllerBlockEntity extends SmartBlockEntity {
     }
 
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
-        super.read(compound, registries, clientPacket);
+    protected void read(CompoundTag compound, boolean clientPacket) {
+        super.read(compound, clientPacket);
 
         binds.clear();
         if (compound.contains("Binds", Tag.TAG_LIST)) {
@@ -175,10 +173,9 @@ public class LecternBrassControllerBlockEntity extends SmartBlockEntity {
 
     public void setController(ItemStack newController) {
         if (newController != null) {
-            binds = new ArrayList<>(newController.getOrDefault(
-                    WCADataComponents.BRASS_LINKED_CONTROLLER_LINKS,
-                    List.of()
-            ));
+            binds = new ArrayList<>(BrassControllerBind.CODEC.listOf()
+                    .parse(NbtOps.INSTANCE, newController.getOrCreateTag().get("BrassLinkedControllerLinks"))
+                    .result().orElse(List.of()));
             AllSoundEvents.CONTROLLER_PUT.playOnServer(level, worldPosition);
         }
     }
@@ -211,19 +208,14 @@ public class LecternBrassControllerBlockEntity extends SmartBlockEntity {
     }
 
     public static boolean playerInRange(Player player, Level world, BlockPos pos) {
-        double reach = 0.4 * player.getAttributeValue(Attributes.BLOCK_INTERACTION_RANGE);
-
-        Vec3 eyePos = player.getEyePosition();
-        Vec3 blockCenter = Vec3.atCenterOf(pos);
-        double dist = SableCompanion.INSTANCE.distanceSquaredWithSubLevels(world, eyePos, blockCenter);
-
-        return dist < reach * reach;
-//        return player.getEyePosition().distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
+        double reach = 0.4 * player.getAttributeValue(ForgeMod.BLOCK_REACH.get());
+        return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach * reach;
     }
 
     private ItemStack createLinkedController() {
         ItemStack stack = WCAItems.BRASS_LINKED_CONTROLLER.asStack();
-        stack.set(WCADataComponents.BRASS_LINKED_CONTROLLER_LINKS, new ArrayList<>(binds));
+        stack.getOrCreateTag().put("BrassLinkedControllerLinks", BrassControllerBind.CODEC.listOf()
+                .encodeStart(NbtOps.INSTANCE, new ArrayList<>(binds)).result().orElse(new ListTag()));
         return stack;
     }
 }

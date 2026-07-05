@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -83,14 +82,15 @@ public class GirderVerticalShaftBlock extends KineticBlock
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
                                               Player player, InteractionHand hand, BlockHitResult hitResult) {
+        ItemStack stack = player.getItemInHand(hand);
         IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
         if (helper.matchesItem(stack))
             return helper.getOffset(player, level, state, pos, hitResult)
                     .placeInWorld(level, (BlockItem) stack.getItem(), player, hand, hitResult);
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.PASS;
     }
 
     @Override
@@ -133,7 +133,7 @@ public class GirderVerticalShaftBlock extends KineticBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         if (target instanceof BlockHitResult hit) {
             if (hit.getDirection() == Direction.UP || hit.getDirection() == Direction.DOWN) {
                 return new ItemStack(AllBlocks.SHAFT);
@@ -147,5 +147,4 @@ public class GirderVerticalShaftBlock extends KineticBlock
         return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), be)
                 .union(ItemRequirement.of(AllBlocks.METAL_GIRDER.getDefaultState(), be));
     }
-
 }

@@ -9,16 +9,14 @@ import com.simibubi.create.foundation.utility.CreateLang;
 import me.wietse3.wca.registry.WCABlocks;
 import me.wietse3.wca.registry.WCAItems;
 import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
+import me.wietse3.wca.registry.WCAPackets;
 import me.wietse3.wca.util.ExtendedControlsUtil;
 import net.createmod.catnip.lang.FontHelper.Palette;
 import net.createmod.catnip.outliner.Outliner;
-import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -26,6 +24,8 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
 
 public class BrassLinkedControllerClientHandler {
 
-    public static final LayeredDraw.Layer OVERLAY = BrassLinkedControllerClientHandler::renderOverlay;
+    public static final IGuiOverlay OVERLAY = BrassLinkedControllerClientHandler::renderOverlay;
 
     public static Mode MODE = Mode.IDLE;
     public static int PACKET_RATE = 5;
@@ -89,11 +89,11 @@ public class BrassLinkedControllerClientHandler {
         selectedLocation = BlockPos.ZERO;
 
         if (inLectern())
-            CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerStopLecternPacket(lecternPos));
+            WCAPackets.getChannel().sendToServer(new BrassLinkedControllerStopLecternPacket(lecternPos));
         lecternPos = null;
 
         if (!currentlyPressed.isEmpty())
-            CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerInputPacket(currentlyPressed, false));
+            WCAPackets.getChannel().sendToServer(new BrassLinkedControllerInputPacket(currentlyPressed, false));
         currentlyPressed.clear();
 
         BrassLinkedControllerItemRenderer.resetButtons();
@@ -162,13 +162,13 @@ public class BrassLinkedControllerClientHandler {
         if (MODE == Mode.ACTIVE) {
             // Released Keys
             if (!releasedKeys.isEmpty()) {
-                CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerInputPacket(releasedKeys, false, lecternPos));
+                WCAPackets.getChannel().sendToServer(new BrassLinkedControllerInputPacket(releasedKeys, false, lecternPos));
                 AllSoundEvents.CONTROLLER_CLICK.playAt(player.level(), player.blockPosition(), 1f, .5f, true);
             }
 
             // Newly Pressed Keys
             if (!newKeys.isEmpty()) {
-                CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerInputPacket(newKeys, true, lecternPos));
+                WCAPackets.getChannel().sendToServer(new BrassLinkedControllerInputPacket(newKeys, true, lecternPos));
                 packetCooldown = PACKET_RATE;
                 AllSoundEvents.CONTROLLER_CLICK.playAt(player.level(), player.blockPosition(), 1f, .75f, true);
             }
@@ -176,7 +176,7 @@ public class BrassLinkedControllerClientHandler {
             // Keepalive Pressed Keys
             if (packetCooldown == 0) {
                 if (!pressedKeys.isEmpty()) {
-                    CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerInputPacket(pressedKeys, true, lecternPos));
+                    WCAPackets.getChannel().sendToServer(new BrassLinkedControllerInputPacket(pressedKeys, true, lecternPos));
                     packetCooldown = PACKET_RATE;
                 }
             }
@@ -194,7 +194,7 @@ public class BrassLinkedControllerClientHandler {
             for (Integer integer : newKeys) {
                 BrassLinkBehavior linkBehaviour = BlockEntityBehaviour.get(mc.level, selectedLocation, BrassLinkBehavior.TYPE);
                 if (linkBehaviour != null) {
-                    CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerBindPacket(integer, selectedLocation));
+                    WCAPackets.getChannel().sendToServer(new BrassLinkedControllerBindPacket(integer, selectedLocation));
                     CreateLang.translate("linked_controller.key_bound", controls.get(integer)
                                     .getTranslatedKeyMessage()
                                     .getString())
@@ -209,9 +209,7 @@ public class BrassLinkedControllerClientHandler {
         controls.forEach(kb -> kb.setDown(false));
     }
 
-    public static void renderOverlay(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        int width1 = guiGraphics.guiWidth();
-        int height1 = guiGraphics.guiHeight();
+    public static void renderOverlay(ForgeGui gui, GuiGraphics guiGraphics, float partialTicks, int width1, int height1) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.options.hideGui)
             return;

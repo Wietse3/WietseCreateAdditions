@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -155,13 +156,13 @@ public class BrassRedstoneLinkBlock extends WrenchableDirectionalBlock implement
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (player.isShiftKeyDown() && toggleMode(state, level, pos) == InteractionResult.SUCCESS) {
             level.scheduleTick(pos, this, 1);
             return InteractionResult.SUCCESS;
         }
 
-        if (player.getMainHandItem().is(AllItems.WRENCH))
+        if (player.getMainHandItem().is(AllItems.WRENCH.get()))
             return InteractionResult.PASS;
 
         if (level.isClientSide) {
@@ -228,7 +229,7 @@ public class BrassRedstoneLinkBlock extends WrenchableDirectionalBlock implement
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+    public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
         return false;
     }
 

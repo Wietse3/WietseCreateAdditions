@@ -111,21 +111,21 @@ public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLin
     }
 
     @Override
-    public void write(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
-        super.write(nbt, registries, clientPacket);
+    public void write(CompoundTag nbt, boolean clientPacket) {
+        super.write(nbt, clientPacket);
         nbt.putString("Frequency", frequency);
         nbt.putBoolean("Inverted", inverted);
         nbt.putLong("LastKnownPosition", blockEntity.getBlockPos().asLong());
     }
 
     @Override
-    public void read(CompoundTag nbt, HolderLookup.Provider registries, boolean clientPacket) {
+    public void read(CompoundTag nbt, boolean clientPacket) {
         long positionInTag = blockEntity.getBlockPos()
                 .asLong();
         long positionKey = nbt.getLong("LastKnownPosition");
         newPosition = positionInTag != positionKey;
 
-        super.read(nbt, registries, clientPacket);
+        super.read(nbt, clientPacket);
         frequency = nbt.getString("Frequency");
         inverted = nbt.getBoolean("Inverted");
     }
@@ -184,14 +184,14 @@ public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLin
     }
 
     @Override
-    public boolean writeToClipboard(@NotNull HolderLookup.Provider registries, CompoundTag tag, Direction side) {
+    public boolean writeToClipboard(CompoundTag tag, Direction side) {
         tag.putString("Frequency", frequency);
         tag.putBoolean("Inverted", inverted);
         return true;
     }
 
     @Override
-    public boolean readFromClipboard(@NotNull HolderLookup.Provider registries, CompoundTag tag, Player player, Direction side, boolean simulate) {
+    public boolean readFromClipboard(CompoundTag tag, Player player, Direction side, boolean simulate) {
         if (simulate)
             return true;
         if (!tag.contains("Frequency"))

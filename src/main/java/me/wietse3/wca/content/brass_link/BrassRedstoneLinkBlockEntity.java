@@ -62,18 +62,18 @@ public class BrassRedstoneLinkBlockEntity extends SmartBlockEntity {
     }
 
     @Override
-    public void write(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+    public void write(CompoundTag compound, boolean clientPacket) {
         compound.putBoolean("Transmitter", transmitter);
         compound.putInt("Receive", getReceivedSignal());
         compound.putBoolean("ReceivedChanged", receivedSignalChanged);
         compound.putInt("Transmit", transmittedSignal);
-        super.write(compound, registries, clientPacket);
+        super.write(compound, clientPacket);
     }
 
     @Override
-    protected void read(CompoundTag compound, HolderLookup.Provider registries, boolean clientPacket) {
+    protected void read(CompoundTag compound, boolean clientPacket) {
         transmitter = compound.getBoolean("Transmitter");
-        super.read(compound, registries, clientPacket);
+        super.read(compound, clientPacket);
 
         receivedSignal = compound.getInt("Receive");
         receivedSignalChanged = compound.getBoolean("ReceivedChanged");

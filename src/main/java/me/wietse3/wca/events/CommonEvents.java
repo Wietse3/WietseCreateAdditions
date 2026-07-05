@@ -4,12 +4,14 @@ import me.wietse3.wca.WietseCreateAdditions;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerServerHandler;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.LevelTickEvent;
+import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class CommonEvents {
 
     @SubscribeEvent
@@ -25,10 +27,12 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public static void onServerWorldTick(LevelTickEvent.Post event) {
-        Level world = event.getLevel();
-        if (world.isClientSide())
+    public static void onServerWorldTick(LevelTickEvent event) {
+        if (event.phase == TickEvent.Phase.START)
             return;
+        if (event.side == LogicalSide.CLIENT)
+            return;
+        Level world = event.level;
 
         BrassLinkedControllerServerHandler.tick(world);
     }

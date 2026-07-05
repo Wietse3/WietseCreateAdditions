@@ -1,17 +1,15 @@
 package me.wietse3.wca;
 
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod(value = WietseCreateAdditions.MODID, dist = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = WietseCreateAdditions.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class WietseCreateAdditionsClient {
-    public WietseCreateAdditionsClient(IEventBus modEventBus) {
-        modEventBus.addListener(this::clientSetup);
-    }
 
-    private void clientSetup(FMLClientSetupEvent event) {
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
         WietseCreateAdditions.LOGGER.info("HELLO FROM CLIENT SETUP");
     }
 }

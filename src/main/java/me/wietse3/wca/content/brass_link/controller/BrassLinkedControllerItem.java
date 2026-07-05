@@ -2,12 +2,12 @@ package me.wietse3.wca.content.brass_link.controller;
 
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import me.wietse3.wca.registry.WCABlocks;
-import me.wietse3.wca.registry.WCADataComponents;
 import me.wietse3.wca.registry.WCAItems;
 import me.wietse3.wca.util.ExtendedControlsUtil;
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -19,9 +19,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,10 +110,9 @@ public class BrassLinkedControllerItem extends Item {
         if (WCAItems.BRASS_LINKED_CONTROLLER.get() != stack.getItem())
             throw new IllegalArgumentException("Cannot get frequencies from non-brass controller: " + stack);
 
-        List<BrassControllerBind> entries = stack.getOrDefault(
-                WCADataComponents.BRASS_LINKED_CONTROLLER_LINKS,
-                Collections.emptyList()
-        );
+        List<BrassControllerBind> entries = BrassControllerBind.CODEC.listOf()
+                .parse(NbtOps.INSTANCE, stack.getOrCreateTag().get("BrassLinkedControllerLinks"))
+                .result().orElse(Collections.emptyList());
 
         List<BrassControllerBind> binds = new ArrayList<>();
 
@@ -132,8 +131,11 @@ public class BrassLinkedControllerItem extends Item {
         if (WCAItems.BRASS_LINKED_CONTROLLER.get() != stack.getItem())
             throw new IllegalArgumentException("Cannot get frequencies from non-brass controller: " + stack);
 
-        List<BrassControllerBind> binds = stack.get(WCADataComponents.BRASS_LINKED_CONTROLLER_LINKS);
-        if (binds == null || index >= binds.size())
+        List<BrassControllerBind> binds = BrassControllerBind.CODEC.listOf()
+                .parse(NbtOps.INSTANCE, stack.getOrCreateTag().get("BrassLinkedControllerLinks"))
+                .result().orElse(Collections.emptyList());
+
+        if (index >= binds.size())
             return BrassControllerBind.EMPTY;
 
         return binds.get(index);

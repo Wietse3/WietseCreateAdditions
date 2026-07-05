@@ -17,22 +17,22 @@ Brass Redstone Links and more!
 config="${mod_id}.mixins.json"
 
 [[dependencies.${mod_id}]]
-    modId="neoforge"
-    type="required"
-    versionRange="[${neo_version},)"
+    modId="forge"
+    mandatory=true
+    versionRange="[${forge_version},)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="minecraft"
-    type="required"
+    mandatory=true
     versionRange="[${minecraft_version}]"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="create"
-    type="required"
+    mandatory=true
     versionRange="[6.0.8,6.1.0)"
     ordering="NONE"
     side="BOTH"

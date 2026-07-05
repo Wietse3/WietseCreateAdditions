@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.gui.widget.IconButton;
 import me.wietse3.wca.registry.WCABlocks;
 import me.wietse3.wca.registry.WCAGuiTextures;
 import me.wietse3.wca.registry.WCALang;
+import me.wietse3.wca.registry.WCAPackets;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
@@ -87,6 +88,6 @@ public class BrassLinkScreen extends AbstractSimiScreen {
     public void onClose() {
         super.onClose();
 
-        CatnipServices.NETWORK.sendToServer(new BrassLinkConfigurePacket(be.getBlockPos(), frequencyBox.getValue(), inverted));
+        WCAPackets.getChannel().sendToServer(new BrassLinkConfigurePacket(be.getBlockPos(), frequencyBox.getValue(), inverted));
     }
 }
