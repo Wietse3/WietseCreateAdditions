@@ -186,7 +186,6 @@ public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLin
     @Override
     public boolean writeToClipboard(CompoundTag tag, Direction side) {
         tag.putString("Frequency", frequency);
-        tag.putBoolean("Inverted", inverted);
         return true;
     }
 
@@ -196,10 +195,7 @@ public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLin
             return true;
         if (!tag.contains("Frequency"))
             return false;
-        if (!tag.contains("Inverted"))
-            return false;
         setFrequency(tag.getString("Frequency"));
-        setInverted(tag.getBoolean("Inverted"));
         return true;
     }
 
