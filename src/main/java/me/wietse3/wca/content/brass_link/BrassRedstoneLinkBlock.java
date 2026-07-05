@@ -7,6 +7,8 @@ import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import me.wietse3.wca.registry.WCABlockEntityTypes;
 import net.createmod.catnip.data.Iterate;
 import net.createmod.catnip.gui.ScreenOpener;
+import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -28,6 +30,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public class BrassRedstoneLinkBlock extends WrenchableDirectionalBlock implements IBE<BrassRedstoneLinkBlockEntity> {
 
@@ -164,13 +168,14 @@ public class BrassRedstoneLinkBlock extends WrenchableDirectionalBlock implement
         if (player.getMainHandItem().is(AllItems.WRENCH))
             return InteractionResult.PASS;
 
-        if (level.isClientSide) {
-            withBlockEntityDo(level, pos, be -> {
-                ScreenOpener.open(new BrassLinkScreen(be));
-            });
-        }
-
+        CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> withBlockEntityDo(level, pos, be -> this.displayScreen(be, player)));
         return InteractionResult.SUCCESS;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    protected void displayScreen(BrassRedstoneLinkBlockEntity be, Player player) {
+        if (player instanceof LocalPlayer)
+            ScreenOpener.open(new BrassLinkScreen(be));
     }
 
     public InteractionResult toggleMode(BlockState state, Level level, BlockPos pos) {

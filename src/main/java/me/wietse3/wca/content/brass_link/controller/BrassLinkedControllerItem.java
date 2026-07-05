@@ -82,7 +82,7 @@ public class BrassLinkedControllerItem extends Item {
 
         if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             if (world.isClientSide)
-                ScreenOpener.open(new BrassLinkedControllerScreen(heldItem));
+                CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> openScreen(heldItem));
             return InteractionResultHolder.success(heldItem);
         }
 
@@ -94,6 +94,11 @@ public class BrassLinkedControllerItem extends Item {
         }
 
         return InteractionResultHolder.pass(heldItem);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private void openScreen(ItemStack stack) {
+        ScreenOpener.open(new BrassLinkedControllerScreen(stack));
     }
 
     @OnlyIn(Dist.CLIENT)
