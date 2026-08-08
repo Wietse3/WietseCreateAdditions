@@ -12,6 +12,10 @@ import me.wietse3.wca.content.brass_link.controller.LecternBrassControllerBlock;
 import me.wietse3.wca.content.girder.GirderVerticalShaftModel;
 import me.wietse3.wca.content.girder.GirderVerticalShaftBlock;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.material.MapColor;
@@ -25,12 +29,16 @@ import static com.simibubi.create.foundation.data.TagGen.*;
 public class WCABlocks {
     private static final CreateRegistrate REGISTRATE = WietseCreateAdditions.getRegistrate();
 
+    public static final TagKey<Block> CARRY_ON_BLACKLIST =
+            BlockTags.create(ResourceLocation.fromNamespaceAndPath("carryon", "block_blacklist"));
+
     public static final BlockEntry<GirderVerticalShaftBlock> METAL_GIRDER_VERTICAL_SHAFT =
             REGISTRATE.block("metal_girder_vertical_shaft", GirderVerticalShaftBlock::new)
                     .initialProperties(SharedProperties::softMetal)
                     .properties(p -> p.mapColor(MapColor.COLOR_GRAY)
                             .sound(SoundType.NETHERITE_BLOCK))
                     .transform(pickaxeOnly())
+                    .tag(CARRY_ON_BLACKLIST)
                     .blockstate((ctx, prov) -> {
                         prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(
                                 prov.modLoc("block/metal_girder_vertical_shaft")
@@ -49,7 +57,7 @@ public class WCABlocks {
                     .properties(p -> p.mapColor(MapColor.TERRACOTTA_BROWN)
                             .forceSolidOn())
                     .transform(axeOrPickaxe())
-                    .tag(AllTags.AllBlockTags.BRITTLE.tag, AllTags.AllBlockTags.SAFE_NBT.tag)
+                    .tag(AllTags.AllBlockTags.BRITTLE.tag, AllTags.AllBlockTags.SAFE_NBT.tag, CARRY_ON_BLACKLIST)
                     .blockstate(new BrassRedstoneLinkGenerator()::generate)
                     .addLayer(() -> RenderType::cutoutMipped)
                     .item()
@@ -60,6 +68,7 @@ public class WCABlocks {
             REGISTRATE.block("lectern_brass_controller", LecternBrassControllerBlock::new)
                     .initialProperties(() -> Blocks.LECTERN)
                     .transform(axeOnly())
+                    .tag(CARRY_ON_BLACKLIST)
                     .blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
                             .getExistingFile(p.mcLoc("block/lectern"))))
                     .loot((lt, block) -> lt.dropOther(block, Blocks.LECTERN))
