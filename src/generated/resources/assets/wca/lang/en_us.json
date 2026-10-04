@@ -1,10 +1,13 @@
 {
   "block.wca.brass_redstone_link": "Brass Redstone Link",
+  "block.wca.copycat_brass_redstone_link": "Copycat Brass Redstone Link",
+  "block.wca.copycat_redstone_link": "Copycat Redstone Link",
   "block.wca.lectern_brass_controller": "Lectern Brass Controller",
   "block.wca.metal_girder_vertical_shaft": "Metal Girder Vertical Shaft",
   "item.wca.brass_linked_controller": "Brass Linked Controller",
   "wca.gui.brass_linked_controller.key": "Keybind: ",
   "wca.gui.brass_linked_controller.power": "Power",
   "wca.gui.brass_redstone_link.invert": "Invert",
+  "wca.gui.brass_redstone_link.title": "Brass Redstone Link",
   "wca.tab.base": "Wietse's Create Additions"
 }

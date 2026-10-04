@@ -3,16 +3,20 @@ package me.wietse3.wca.content.brass_link.controller;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
+import me.wietse3.wca.content.brass_link.FrequencyEditBox;
 import me.wietse3.wca.registry.WCAGuiTextures;
 import me.wietse3.wca.util.ExtendedControlsUtil;
 import me.wietse3.wca.registry.WCALang;
+import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -21,7 +25,7 @@ import java.util.List;
 public class BrassLinkedControllerScreen extends AbstractSimiScreen {
 
     private final WCAGuiTextures background = WCAGuiTextures.BRASS_LINKED_CONTROLLER;
-    private final EditBox[] inputs = new EditBox[7];
+    private final FrequencyEditBox[] inputs = new FrequencyEditBox[7];
     private final ScrollInput[] powers = new ScrollInput[7];
     private ItemStack heldItem;
 
@@ -55,14 +59,21 @@ public class BrassLinkedControllerScreen extends AbstractSimiScreen {
         addRenderableWidget(resetButton);
         addRenderableWidget(confirmButton);
 
-        List<BrassControllerBind> binds = BrassLinkedControllerItem.getFrequencies(heldItem);
-        int inputY = 27;
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
 
+        List<IntAttached<String>> options = List.of();
+        if (player != null) {
+            options = BrassLinkBehavior.createSuggestions(mc.level, player.blockPosition());
+        }
+
+        List<BrassControllerBind> binds = BrassLinkedControllerItem.getFrequencies(heldItem);
+        
+        int inputY = 27;
         for (int i = 0; i < inputs.length; i++) {
-            inputs[i] = new EditBox(font, x + 28, y + inputY, 100, 16, Component.empty());
+            inputs[i] = new FrequencyEditBox(this, font, x + 28, y + inputY, 100, 14,
+                    false, options);
             inputs[i].setTextColor(0xFFFFFF);
-            inputs[i].setBordered(false);
-            inputs[i].setMaxLength(25);
             inputs[i].setValue(binds.get(i).frequency());
             addRenderableWidget(inputs[i]);
 
@@ -123,6 +134,22 @@ public class BrassLinkedControllerScreen extends AbstractSimiScreen {
 
         int slot = minecraft.player.getInventory().selected;
         CatnipServices.NETWORK.sendToServer(new BrassLinkedControllerScreenPacket(slot, binds));
+    }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        for (FrequencyEditBox input : inputs) {
+            if (input.mouseScrolled(mouseX, mouseY, scrollX, scrollY))
+                return true;
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        for (FrequencyEditBox input : inputs)
+            input.tick();
     }
 }

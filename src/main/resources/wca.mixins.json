@@ -1,8 +1,13 @@
 {
   "required": true,
   "package": "me.wietse3.wca.mixin",
+  "plugin": "me.wietse3.wca.mixin.WCAMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "copycats.CopycatBlockEntityMixin",
+    "copycats.CopycatBlockMixin",
+    "copycats.ValueBoxTransformMixin",
+    "copycats.LinkRendererMixin",
     "create.GirderBlockMixin",
     "create.GirderCTBehaviourMixin",
     "create.ShaftBlockMixin"

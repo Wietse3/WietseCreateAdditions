@@ -3,7 +3,6 @@ package me.wietse3.wca.content.brass_link;
 import com.simibubi.create.content.logistics.factoryBoard.FactoryPanelSupportBehaviour;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import me.wietse3.wca.registry.WCABlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -30,7 +29,7 @@ public class BrassRedstoneLinkBlockEntity extends SmartBlockEntity {
     @Override
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         behaviours.add(panelSupport = new FactoryPanelSupportBehaviour(this, () -> link != null && link.isListening(),
-                () -> receivedSignal > 0, () -> WCABlocks.BRASS_REDSTONE_LINK.get()
+                () -> receivedSignal > 0, () -> ((BrassRedstoneLink<?>) getBlockState().getBlock())
                 .updateTransmittedSignal(getBlockState(), level, worldPosition)));
     }
 
@@ -38,6 +37,17 @@ public class BrassRedstoneLinkBlockEntity extends SmartBlockEntity {
     public void addBehavioursDeferred(List<BlockEntityBehaviour> behaviours) {
         createLink();
         behaviours.add(link);
+    }
+
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        if (level != null && level.isClientSide && link == null) {
+            transmitter = isTransmitterBlock();
+            createLink();
+            attachBehaviourLate(link);
+        }
     }
 
     protected void createLink() {
@@ -100,12 +110,12 @@ public class BrassRedstoneLinkBlockEntity extends SmartBlockEntity {
             return;
 
         BlockState blockState = getBlockState();
-        if (!WCABlocks.BRASS_REDSTONE_LINK.has(blockState))
+        if (!(blockState.getBlock() instanceof BrassRedstoneLink))
             return;
 
-        if ((getReceivedSignal() > 0) != blockState.getValue(BrassRedstoneLinkBlock.POWERED)) {
+        if ((getReceivedSignal() > 0) != blockState.getValue(BrassRedstoneLink.POWERED)) {
             receivedSignalChanged = true;
-            level.setBlockAndUpdate(worldPosition, blockState.cycle(BrassRedstoneLinkBlock.POWERED));
+            level.setBlockAndUpdate(worldPosition, blockState.cycle(BrassRedstoneLink.POWERED));
         }
 
         if (receivedSignalChanged) {
@@ -121,7 +131,7 @@ public class BrassRedstoneLinkBlockEntity extends SmartBlockEntity {
     }
 
     public void updateSelfAndAttached(BlockState blockState) {
-        Direction attachedFace = blockState.getValue(BrassRedstoneLinkBlock.FACING)
+        Direction attachedFace = blockState.getValue(BrassRedstoneLink.FACING)
                 .getOpposite();
         BlockPos attachedPos = worldPosition.relative(attachedFace);
         level.blockUpdated(worldPosition, level.getBlockState(worldPosition)
@@ -133,7 +143,7 @@ public class BrassRedstoneLinkBlockEntity extends SmartBlockEntity {
     }
 
     protected Boolean isTransmitterBlock() {
-        return !getBlockState().getValue(BrassRedstoneLinkBlock.RECEIVER);
+        return !getBlockState().getValue(BrassRedstoneLink.RECEIVER);
     }
 
     public int getReceivedSignal() {

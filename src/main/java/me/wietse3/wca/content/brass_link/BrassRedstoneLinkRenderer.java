@@ -15,8 +15,11 @@ public class BrassRedstoneLinkRenderer extends SmartBlockEntityRenderer<BrassRed
     @Override
     protected void renderSafe(BrassRedstoneLinkBlockEntity be, float partialTicks, PoseStack ms,
                               MultiBufferSource buffer, int light, int overlay) {
-        String frequency = be.getBehaviour(BrassLinkBehavior.TYPE).getNetworkKey();
+        BrassLinkBehavior behavior = be.getBehaviour(BrassLinkBehavior.TYPE);
+        if (behavior == null)
+            return;
 
+        String frequency = behavior.getNetworkKey();
         if (!frequency.isEmpty()) {
             renderNameplateOnHover(be, Component.literal(frequency), 0.5f, ms, buffer, light);
         }

@@ -1,6 +1,14 @@
 {
   "values": [
     "wca:brass_redstone_link",
-    "wca:lectern_brass_controller"
+    "wca:lectern_brass_controller",
+    {
+      "id": "wca:copycat_redstone_link",
+      "required": false
+    },
+    {
+      "id": "wca:copycat_brass_redstone_link",
+      "required": false
+    }
   ]
 }

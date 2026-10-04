@@ -1,0 +1,21 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "block/thin_block",
+	"textures": {
+		"1": "wca:block/copycat_link_indicator_receiver_powered"
+	},
+	"elements": [
+		{
+			"name": "indicator",
+			"from": [-0.005, 0, -0.005],
+			"to": [16.005, 3, 16.005],
+			"faces": {
+				"north": {"uv": [0, 13, 16, 16], "texture": "#1"},
+				"east": {"uv": [0, 13, 16, 16], "texture": "#1"},
+				"south": {"uv": [0, 13, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 13, 16, 16], "texture": "#1"}
+			}
+		}
+	]
+}

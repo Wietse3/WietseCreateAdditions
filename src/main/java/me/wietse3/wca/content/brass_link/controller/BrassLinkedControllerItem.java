@@ -1,6 +1,7 @@
 package me.wietse3.wca.content.brass_link.controller;
 
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
+import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
 import me.wietse3.wca.registry.WCABlocks;
 import me.wietse3.wca.registry.WCADataComponents;
 import me.wietse3.wca.registry.WCAItems;
@@ -52,7 +53,9 @@ public class BrassLinkedControllerItem extends Item {
                     return InteractionResult.SUCCESS;
                 }
             } else {
-                if (WCABlocks.BRASS_REDSTONE_LINK.has(hitState)) {
+                BrassLinkBehavior behavior = BrassLinkBehavior.get(world, pos, BrassLinkBehavior.TYPE);
+
+                if (behavior != null) {
                     if (world.isClientSide)
                         CatnipServices.PLATFORM.executeOnClientOnly(() -> () -> this.toggleBindMode(ctx.getClickedPos()));
                     player.getCooldowns()

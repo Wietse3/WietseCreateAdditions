@@ -8,6 +8,7 @@ public class WCALang extends Lang {
 
     public static void register() {
         add("tab.base", "Wietse's Create Additions");
+        add("gui.brass_redstone_link.title", "Brass Redstone Link");
         add("gui.brass_redstone_link.invert", "Invert");
         add("gui.brass_linked_controller.key", "Keybind: ");
         add("gui.brass_linked_controller.power", "Power");

@@ -9,8 +9,6 @@ import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class BrassLinkScreen extends AbstractSimiScreen {
@@ -19,14 +17,14 @@ public class BrassLinkScreen extends AbstractSimiScreen {
     private final WCAGuiTextures background = WCAGuiTextures.BRASS_REDSTONE_LINK;
     private BrassRedstoneLinkBlockEntity be;
 
-    private EditBox frequencyBox;
+    private FrequencyEditBox frequencyBox;
     private IconButton confirmButton;
 
     private IconButton invertButton;
     private boolean inverted;
 
     public BrassLinkScreen(BrassRedstoneLinkBlockEntity be) {
-        super(be.getBlockState().getBlock().getName());
+        super(WCALang.translate("gui.brass_redstone_link.title").component());
         this.be = be;
     }
 
@@ -41,10 +39,8 @@ public class BrassLinkScreen extends AbstractSimiScreen {
 
         BrassLinkBehavior behavior = be.getBehaviour(BrassLinkBehavior.TYPE);
 
-        frequencyBox = new EditBox(font, x + 20, y + 32, 132, 16, Component.empty());
+        frequencyBox = new FrequencyEditBox(this, font, x + 20, y + 32, 132, 14, false, be.getBlockPos());
         frequencyBox.setTextColor(0xFFFFFF);
-        frequencyBox.setBordered(false);
-        frequencyBox.setMaxLength(25);
         frequencyBox.setValue(behavior.frequency);
         addRenderableWidget(frequencyBox);
         setFocused(frequencyBox);
@@ -88,5 +84,18 @@ public class BrassLinkScreen extends AbstractSimiScreen {
         super.onClose();
 
         CatnipServices.NETWORK.sendToServer(new BrassLinkConfigurePacket(be.getBlockPos(), frequencyBox.getValue(), inverted));
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (frequencyBox.mouseScrolled(mouseX, mouseY, scrollX, scrollY))
+            return true;
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        frequencyBox.tick();
     }
 }
