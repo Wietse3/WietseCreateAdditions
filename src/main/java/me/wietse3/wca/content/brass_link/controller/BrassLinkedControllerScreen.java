@@ -7,7 +7,7 @@ import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
 import me.wietse3.wca.content.brass_link.FrequencyEditBox;
 import me.wietse3.wca.registry.WCAGuiTextures;
 import me.wietse3.wca.util.ExtendedControlsUtil;
-import me.wietse3.wca.registry.WCALang;
+import me.wietse3.wca.util.WCALang;
 import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
@@ -108,10 +108,8 @@ public class BrassLinkedControllerScreen extends AbstractSimiScreen {
                 inputY += 5;
 
             if (inputs[i].isMouseOver(mouseX, mouseY)) {
-                tooltip = WCALang.translate("gui.brass_linked_controller.key").add(
-                        ExtendedControlsUtil.getExtendedControls()
-                        .get(i)
-                        .getTranslatedKeyMessage()
+                tooltip = WCALang.translate("gui.brass_linked_controller.key",
+                        ExtendedControlsUtil.getExtendedControls().get(i).getTranslatedKeyMessage()
                 ).component().withStyle(ChatFormatting.GOLD);
                 graphics.renderTooltip(font, tooltip, mouseX, mouseY);
             }

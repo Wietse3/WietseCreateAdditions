@@ -5,10 +5,12 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
 import me.wietse3.wca.integration.copycats.CopycatsIntegration;
+import me.wietse3.wca.data.WCADatagen;
 import me.wietse3.wca.content.brass_link.BrassLinkNetworkHandler;
 import me.wietse3.wca.registry.*;
 import net.createmod.catnip.lang.FontHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -39,6 +41,7 @@ public class WietseCreateAdditions {
         REGISTRATE.registerEventListeners(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(EventPriority.HIGHEST, WCADatagen::gatherDataHighPriority);
 
         WCABlocks.register();
         WCABlockEntityTypes.register();
@@ -46,7 +49,6 @@ public class WietseCreateAdditions {
         WCACreativeTabs.register(modEventBus);
         WCADataComponents.register(modEventBus);
         WCAPackets.register();
-        WCALang.register();
 
         if (ModList.get().isLoaded("copycats")) {
             CopycatsIntegration.register();

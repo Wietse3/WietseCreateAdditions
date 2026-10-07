@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "create:crafter_slot_cover"
+    },
+    "S": {
+      "tag": "c:plates/brass"
+    },
+    "T": {
+      "item": "create:transmitter"
+    }
+  },
+  "pattern": [
+    "S",
+    "T",
+    "C"
+  ],
+  "result": {
+    "count": 1,
+    "id": "wca:brass_link_bridge"
+  }
+}

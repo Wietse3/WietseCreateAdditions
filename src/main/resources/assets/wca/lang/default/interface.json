@@ -1,0 +1,8 @@
+{
+  "itemGroup.wca.base": "Wietse's Create Additions",
+
+  "wca.gui.brass_redstone_link.title": "Brass Redstone Link",
+  "wca.gui.brass_redstone_link.invert": "Invert",
+  "wca.gui.brass_linked_controller.key": "Keybind: %s",
+  "wca.gui.brass_linked_controller.power": "Power"
+}

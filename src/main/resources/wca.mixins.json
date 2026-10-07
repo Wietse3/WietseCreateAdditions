@@ -6,10 +6,11 @@
   "mixins": [
     "copycats.CopycatBlockEntityMixin",
     "copycats.CopycatBlockMixin",
-    "copycats.ValueBoxTransformMixin",
     "copycats.LinkRendererMixin",
+    "copycats.ValueBoxTransformMixin",
     "create.GirderBlockMixin",
     "create.GirderCTBehaviourMixin",
+    "create.RedstoneLinkNetworkHandlerMixin",
     "create.ShaftBlockMixin"
   ],
   "injectors": {

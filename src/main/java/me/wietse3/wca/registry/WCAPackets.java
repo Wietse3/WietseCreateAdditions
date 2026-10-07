@@ -2,6 +2,7 @@ package me.wietse3.wca.registry;
 
 import me.wietse3.wca.WietseCreateAdditions;
 import me.wietse3.wca.content.brass_link.BrassLinkConfigurePacket;
+import me.wietse3.wca.content.brass_link.bridge.BrassLinkBridgeScreenPacket;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerBindPacket;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerInputPacket;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerScreenPacket;
@@ -20,7 +21,8 @@ public enum WCAPackets implements BasePacketPayload.PacketTypeProvider {
     BRASS_LINKED_CONTROLLER_INPUT(BrassLinkedControllerInputPacket.class, BrassLinkedControllerInputPacket.STREAM_CODEC),
     BRASS_LINKED_CONTROLLER_BIND(BrassLinkedControllerBindPacket.class, BrassLinkedControllerBindPacket.STREAM_CODEC),
     BRASS_LINKED_CONTROLLER_STOP_LECTERN(BrassLinkedControllerStopLecternPacket.class, BrassLinkedControllerStopLecternPacket.STREAM_CODEC),
-    BRASS_LINKED_CONTROLLER_SCREEN(BrassLinkedControllerScreenPacket.class, BrassLinkedControllerScreenPacket.STREAM_CODEC);
+    BRASS_LINKED_CONTROLLER_SCREEN(BrassLinkedControllerScreenPacket.class, BrassLinkedControllerScreenPacket.STREAM_CODEC),
+    BRASS_LINK_BRIDGE_SCREEN(BrassLinkBridgeScreenPacket.class, BrassLinkBridgeScreenPacket.CODEC);
 
     private final CatnipPacketRegistry.PacketType<?> type;
 

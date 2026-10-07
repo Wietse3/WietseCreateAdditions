@@ -4,7 +4,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import me.wietse3.wca.registry.WCABlocks;
 import me.wietse3.wca.registry.WCAGuiTextures;
-import me.wietse3.wca.registry.WCALang;
+import me.wietse3.wca.util.WCALang;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
@@ -15,10 +15,9 @@ public class BrassLinkScreen extends AbstractSimiScreen {
 
     private final ItemStack renderedItem = WCABlocks.BRASS_REDSTONE_LINK.asStack();
     private final WCAGuiTextures background = WCAGuiTextures.BRASS_REDSTONE_LINK;
-    private BrassRedstoneLinkBlockEntity be;
+    private final BrassRedstoneLinkBlockEntity be;
 
     private FrequencyEditBox frequencyBox;
-    private IconButton confirmButton;
 
     private IconButton invertButton;
     private boolean inverted;
@@ -45,7 +44,7 @@ public class BrassLinkScreen extends AbstractSimiScreen {
         addRenderableWidget(frequencyBox);
         setFocused(frequencyBox);
 
-        confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
+        IconButton confirmButton = new IconButton(x + background.getWidth() - 33, y + background.getHeight() - 24, AllIcons.I_CONFIRM);
         confirmButton.withCallback(this::onClose);
         addRenderableWidget(confirmButton);
 

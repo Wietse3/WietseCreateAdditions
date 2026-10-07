@@ -1,9 +1,12 @@
 package me.wietse3.wca.registry;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.SharedProperties;
+import com.simibubi.create.foundation.data.recipe.CommonMetal;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import me.wietse3.wca.WietseCreateAdditions;
 import me.wietse3.wca.content.brass_link.BrassRedstoneLinkBlock;
@@ -12,6 +15,8 @@ import me.wietse3.wca.content.brass_link.controller.LecternBrassControllerBlock;
 import me.wietse3.wca.content.girder.GirderVerticalShaftModel;
 import me.wietse3.wca.content.girder.GirderVerticalShaftBlock;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -62,6 +67,17 @@ public class WCABlocks {
                     .addLayer(() -> RenderType::cutoutMipped)
                     .item()
                     .transform(customItemModel("_", "transmitter"))
+                    .recipe((c, p) -> {
+                        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, c.get(), 2)
+                                .pattern("S")
+                                .pattern("T")
+                                .pattern("C")
+                                .define('S', CommonMetal.BRASS.plates)
+                                .define('T', AllItems.TRANSMITTER)
+                                .define('C', AllBlocks.BRASS_CASING)
+                                .unlockedBy("has_ingredient", RegistrateRecipeProvider.has(AllItems.TRANSMITTER))
+                                .save(p);
+                    })
                     .register();
 
     public static final BlockEntry<LecternBrassControllerBlock> LECTERN_BRASS_CONTROLLER =

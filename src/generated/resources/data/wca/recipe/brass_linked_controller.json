@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": {
-      "item": "wca:brass_redstone_link"
-    },
-    "S": {
+    "B": {
       "tag": "minecraft:wooden_buttons"
+    },
+    "L": {
+      "item": "wca:brass_redstone_link"
     }
   },
   "pattern": [
-    "SSS",
-    " P ",
-    "SSS"
+    "BBB",
+    " L ",
+    "BBB"
   ],
   "result": {
     "count": 1,

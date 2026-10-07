@@ -1,5 +1,6 @@
 package me.wietse3.wca.registry;
 
+import com.mojang.serialization.Codec;
 import me.wietse3.wca.WietseCreateAdditions;
 import me.wietse3.wca.content.brass_link.controller.BrassControllerBind;
 import net.minecraft.core.component.DataComponentType;
@@ -7,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -20,6 +20,10 @@ public class WCADataComponents {
             "brass_linked_controller_links", builder -> builder
                     .persistent(BrassControllerBind.CODEC.listOf())
                     .networkSynchronized(ByteBufCodecs.fromCodec(BrassControllerBind.CODEC.listOf())));
+
+    public static final DataComponentType<String> LINK_BRIDGE_FREQUENCY = register(
+            "link_bridge_frequency", builder -> builder
+                    .persistent(Codec.STRING));
 
     private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
         DataComponentType<T> type = builder.apply(DataComponentType.builder()).build();
