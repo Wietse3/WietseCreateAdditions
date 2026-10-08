@@ -5,7 +5,6 @@ import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
 import me.wietse3.wca.registry.WCABlocks;
 import me.wietse3.wca.registry.WCADataComponents;
 import me.wietse3.wca.registry.WCAItems;
-import me.wietse3.wca.util.ExtendedControlsUtil;
 import net.createmod.catnip.gui.ScreenOpener;
 import net.createmod.catnip.platform.CatnipServices;
 import net.minecraft.core.BlockPos;
@@ -125,7 +124,7 @@ public class BrassLinkedControllerItem extends Item {
 
         List<BrassControllerBind> binds = new ArrayList<>();
 
-        for (int i = 0; i < ExtendedControlsUtil.getExtendedControls().size(); i++) {
+        for (int i = 0; i < 7; i++) {
             if (i < entries.size()) {
                 binds.add(entries.get(i));
             } else {
