@@ -2,15 +2,20 @@ package me.wietse3.wca.content.brass_link.bridge;
 
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
 import me.wietse3.wca.content.brass_link.FrequencyEditBox;
 import me.wietse3.wca.registry.WCAGuiTextures;
+import net.createmod.catnip.data.IntAttached;
 import net.createmod.catnip.gui.AbstractSimiScreen;
 import net.createmod.catnip.gui.element.GuiGameElement;
 import net.createmod.catnip.platform.CatnipServices;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.logging.Level;
 
 public class BrassLinkBridgeScreen extends AbstractSimiScreen {
 
@@ -33,8 +38,15 @@ public class BrassLinkBridgeScreen extends AbstractSimiScreen {
         int x = guiLeft;
         int y = guiTop;
 
+        Minecraft mc = Minecraft.getInstance();
+
+        List<IntAttached<String>> options = List.of();
+        if (mc.player != null && mc.level != null) {
+            options = BrassLinkBehavior.createSuggestions(mc.level, mc.player.blockPosition());
+        }
+
         frequencyBox = new FrequencyEditBox(this, font, x + 20, y + 32, 132, 14,
-                false, List.of());
+                false, options);
         frequencyBox.setTextColor(0xFFFFFF);
         frequencyBox.setValue(BrassLinkBridgeItem.getFrequency(stack));
         addRenderableWidget(frequencyBox);

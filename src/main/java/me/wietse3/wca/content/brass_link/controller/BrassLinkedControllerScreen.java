@@ -60,11 +60,10 @@ public class BrassLinkedControllerScreen extends AbstractSimiScreen {
         addRenderableWidget(confirmButton);
 
         Minecraft mc = Minecraft.getInstance();
-        Player player = mc.player;
 
         List<IntAttached<String>> options = List.of();
-        if (player != null) {
-            options = BrassLinkBehavior.createSuggestions(mc.level, player.blockPosition());
+        if (mc.player != null && mc.level != null) {
+            options = BrassLinkBehavior.createSuggestions(mc.level, mc.player.blockPosition());
         }
 
         List<BrassControllerBind> binds = BrassLinkedControllerItem.getFrequencies(heldItem);
