@@ -1,9 +1,13 @@
 package me.wietse3.wca.content.brass_link.bridge;
 
 import com.simibubi.create.content.redstone.link.IRedstoneLinkable;
+import me.wietse3.wca.config.WCAConfigs;
 import me.wietse3.wca.content.brass_link.IBrassLinkable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 
 public class BrassLinkBridge implements IBrassLinkable {
 
@@ -13,7 +17,11 @@ public class BrassLinkBridge implements IBrassLinkable {
         this.link = link;
     }
 
-    public static boolean canBridge(IRedstoneLinkable link) {
+    public static boolean canBridge(LevelAccessor world, IRedstoneLinkable link) {
+        Block block = world.getBlockState(link.getLocation()).getBlock();
+        if (WCAConfigs.server().linkBridgeBlacklist.get().contains(BuiltInRegistries.BLOCK.getKey(block).toString()))
+            return false;
+
         return getFrequency(link.getNetworkKey().getFirst().getStack()) != null
                 || getFrequency(link.getNetworkKey().getSecond().getStack()) != null;
     }

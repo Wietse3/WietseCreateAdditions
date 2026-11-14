@@ -10,7 +10,7 @@
   "item.wca.brass_link_bridge.tooltip.behaviour2": "Transmits to or receives from _Brass Redstone Links_.",
   "item.wca.brass_link_bridge.tooltip.condition1": "When R-Clicked",
   "item.wca.brass_link_bridge.tooltip.condition2": "When put in a Frequency slot",
-  "item.wca.brass_link_bridge.tooltip.summary": "Used to bridge _Redstone Links_ with _Brass Redstone Links_.",
+  "item.wca.brass_link_bridge.tooltip.summary": "Used to bridge addon _Redstone Links_ with _Brass Redstone Links_.",
   "item.wca.brass_linked_controller": "Brass Linked Controller",
   "item.wca.brass_linked_controller.tooltip.behaviour1": "_Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
   "item.wca.brass_linked_controller.tooltip.behaviour2": "Opens the manual _Configuration Interface_.",

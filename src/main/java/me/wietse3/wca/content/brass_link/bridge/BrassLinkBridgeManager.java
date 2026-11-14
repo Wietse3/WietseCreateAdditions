@@ -12,7 +12,7 @@ public class BrassLinkBridgeManager {
     private static final Map<IRedstoneLinkable, BrassLinkBridge> BRIDGES = new IdentityHashMap<>();
 
     public static boolean add(LevelAccessor world, IRedstoneLinkable link) {
-        if (!BrassLinkBridge.canBridge(link))
+        if (!BrassLinkBridge.canBridge(world, link))
             return false;
 
         BrassLinkBridge bridge = BRIDGES.computeIfAbsent(link, BrassLinkBridge::new);

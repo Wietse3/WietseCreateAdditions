@@ -1,11 +1,10 @@
 package me.wietse3.wca.content.brass_link;
 
-import com.simibubi.create.infrastructure.config.AllConfigs;
 import dev.ryanhcode.sable.companion.SableCompanion;
 import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import me.wietse3.wca.WietseCreateAdditions;
-import me.wietse3.wca.content.brass_link.bridge.BrassLinkBridge;
+import me.wietse3.wca.config.WCAConfigs;
 import net.createmod.catnip.levelWrappers.WorldHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -58,7 +57,6 @@ public class BrassLinkNetworkHandler {
         Set<IBrassLinkable> network = getNetworkOf(world, actor);
         globalPowerVersion.incrementAndGet();
         int power = 0;
-        int bridgePower = 0;
 
         for (Iterator<IBrassLinkable> iterator = network.iterator(); iterator.hasNext(); ) {
             IBrassLinkable other = iterator.next();
@@ -72,9 +70,6 @@ public class BrassLinkNetworkHandler {
 
             if (power < 15)
                 power = Math.max(other.getTransmittedStrength(), power);
-
-            if (!(other instanceof BrassLinkBridge) && bridgePower < 15)
-                bridgePower = Math.max(other.getTransmittedStrength(), bridgePower);
         }
 
         if (actor instanceof BrassLinkBehavior linkBehaviour) {
@@ -86,12 +81,8 @@ public class BrassLinkNetworkHandler {
         }
 
         for (IBrassLinkable other : network) {
-            if (other != actor && other.isListening() && withinRange(actor, other, world)) {
-                if (other instanceof BrassLinkBridge)
-                    other.setReceivedStrength(bridgePower);
-                else
-                    other.setReceivedStrength(power);
-            }
+            if (other != actor && other.isListening() && withinRange(actor, other, world))
+                other.setReceivedStrength(power);
         }
     }
 
@@ -113,7 +104,7 @@ public class BrassLinkNetworkHandler {
             toSublevel.logicalPose().transformPosition(toPos);
         }
 
-        int linkRange = AllConfigs.server().logistics.linkRange.get();
+        int linkRange = WCAConfigs.server().brassLinkRange.get();
         return fromPos.distanceSquared(toPos) < linkRange * linkRange;
     }
 

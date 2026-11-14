@@ -1,6 +1,2 @@
-- Added Copycat Redstone Link and Copycat Brass Redstone link.
-- Added Brass Link Bridge that allows normal Redstone Links to transmit to and receive from Brass Redstone Links. This allows modded blocks like the Linked Typewriter from Simulated to work with brass links.
-- Added frequency suggestions from nearby links in the frequency text box.
-- Added summaries to items.
-- Changed recipe of Brass Redstone Link.
-- Fixed issue with Carry On.
+- Added server config.
+- Bridges can now receive from transmitting bridges, but will no longer work on regular redstone links.

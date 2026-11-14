@@ -4,6 +4,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.KineticStats;
 import com.simibubi.create.foundation.item.TooltipModifier;
+import me.wietse3.wca.config.WCAConfigs;
 import me.wietse3.wca.integration.copycats.CopycatsIntegration;
 import me.wietse3.wca.data.WCADatagen;
 import me.wietse3.wca.content.brass_link.BrassLinkNetworkHandler;
@@ -49,6 +50,8 @@ public class WietseCreateAdditions {
         WCACreativeTabs.register(modEventBus);
         WCADataComponents.register(modEventBus);
         WCAPackets.register();
+
+        WCAConfigs.register(modContainer);
 
         if (ModList.get().isLoaded("copycats")) {
             CopycatsIntegration.register();

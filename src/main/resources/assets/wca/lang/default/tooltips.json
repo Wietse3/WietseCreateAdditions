@@ -11,7 +11,7 @@
   "item.wca.brass_linked_controller.tooltip.condition4": "R-Click on Lectern",
   "item.wca.brass_linked_controller.tooltip.behaviour4": "Places the Controller into the Lectern for easy activation. (R-Click while Sneaking to retrieve it)",
 
-  "item.wca.brass_link_bridge.tooltip.summary": "Used to bridge _Redstone Links_ with _Brass Redstone Links_.",
+  "item.wca.brass_link_bridge.tooltip.summary": "Used to bridge addon _Redstone Links_ with _Brass Redstone Links_.",
   "item.wca.brass_link_bridge.tooltip.condition1": "When R-Clicked",
   "item.wca.brass_link_bridge.tooltip.behaviour1": "Opens the _Configuration Interface_.",
   "item.wca.brass_link_bridge.tooltip.condition2": "When put in a Frequency slot",
