@@ -104,7 +104,7 @@ public class BrassLinkNetworkHandler {
             toSublevel.logicalPose().transformPosition(toPos);
         }
 
-        int linkRange = WCAConfigs.server().brassLinkRange.get();
+        int linkRange = WCAConfigs.server().links.linkRange.get();
         return fromPos.distanceSquared(toPos) < linkRange * linkRange;
     }
 

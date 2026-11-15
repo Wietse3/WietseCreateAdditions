@@ -2,6 +2,7 @@ package me.wietse3.wca.content.brass_link;
 
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
+import me.wietse3.wca.config.WCAConfigs;
 import me.wietse3.wca.registry.WCABlocks;
 import me.wietse3.wca.registry.WCAGuiTextures;
 import me.wietse3.wca.util.WCALang;
@@ -50,7 +51,8 @@ public class BrassLinkScreen extends AbstractSimiScreen {
 
         int optionX = x + 7;
 
-        if (behavior.isListening()) {
+        boolean invertAllowed = WCAConfigs.server().links.allowInvertMode.get();
+        if (behavior.isListening() && invertAllowed) {
             invertButton = new IconButton(optionX , y + background.getHeight() - 24, AllIcons.I_FLIP);
             invertButton.setToolTip(WCALang.translate("gui.brass_redstone_link.invert").component());
             invertButton.withCallback(() -> setInverted(!inverted));

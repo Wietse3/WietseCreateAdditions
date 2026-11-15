@@ -1,7 +1,7 @@
 package me.wietse3.wca.integration.copycats;
 
 import com.simibubi.create.AllBlocks;
-import me.wietse3.wca.config.CServer;
+import me.wietse3.wca.config.server.CLinks.CopycatLinkSetting;
 import me.wietse3.wca.config.WCAConfigs;
 import me.wietse3.wca.content.brass_link.copycat.CopycatBrassLinkBlock;
 import me.wietse3.wca.content.link.copycat.CopycatLinkBlock;
@@ -41,12 +41,12 @@ public class CopycatsEvents {
         if (!isLink && !isBrassLink)
             return;
 
-        CServer.CopycatLinkSetting setting = WCAConfigs.server().copycatLinkInteraction.get();
+        CopycatLinkSetting setting = WCAConfigs.server().links.copycatLinkInteraction.get();
 
-        if (setting == CServer.CopycatLinkSetting.NONE)
+        if (setting == CopycatLinkSetting.NONE)
             return;
 
-        if (setting == CServer.CopycatLinkSetting.BRASS_ONLY && !isBrassLink)
+        if (setting == CopycatLinkSetting.BRASS_ONLY && !isBrassLink)
             return;
 
         level.playSound(null, pos, SoundEvents.METAL_PLACE, SoundSource.BLOCKS, 1, 1.25f);

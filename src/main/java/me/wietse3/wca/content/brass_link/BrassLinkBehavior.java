@@ -4,13 +4,12 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import com.simibubi.create.infrastructure.config.AllConfigs;
 import dev.ryanhcode.sable.companion.SableCompanion;
 import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import me.wietse3.wca.WietseCreateAdditions;
+import me.wietse3.wca.config.WCAConfigs;
 import net.createmod.catnip.data.IntAttached;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -221,7 +220,7 @@ public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLin
         if (playerSublevel != null)
             playerSublevel.logicalPose().transformPosition(pos);
 
-        int linkRange = AllConfigs.server().logistics.linkRange.get();
+        int linkRange = WCAConfigs.server().links.linkRange.get();
         Map<String, Integer> nearest = new HashMap<>();
 
         for (BrassLinkBehavior link : CLIENT_LINKS) {

@@ -19,7 +19,7 @@ public class BrassLinkBridge implements IBrassLinkable {
 
     public static boolean canBridge(LevelAccessor world, IRedstoneLinkable link) {
         Block block = world.getBlockState(link.getLocation()).getBlock();
-        if (WCAConfigs.server().linkBridgeBlacklist.get().contains(BuiltInRegistries.BLOCK.getKey(block).toString()))
+        if (WCAConfigs.server().links.bridgeBlacklist.get().contains(BuiltInRegistries.BLOCK.getKey(block).toString()))
             return false;
 
         return getFrequency(link.getNetworkKey().getFirst().getStack()) != null
