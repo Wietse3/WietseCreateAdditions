@@ -1,2 +1,2 @@
-- Added server config.
-- Bridges can now receive from transmitting bridges, but will no longer work on regular redstone links.
+- Bridges now show up in suggestions.
+- Some config changes.
