@@ -52,7 +52,7 @@ public class CopycatLinkRenderer<T extends SmartBlockEntity> extends SmartBlockE
 
                 BrassLinkBehavior behavior = be.getBehaviour(BrassLinkBehavior.TYPE);
                 if (behavior != null) {
-                    String frequency = behavior.getNetworkKey();
+                    String frequency = behavior.getFrequency();
                     if (!frequency.isEmpty()) {
                         renderNameplateOnHover(be, Component.literal(frequency), 0.5f, poseStack, buffer, light);
                     }

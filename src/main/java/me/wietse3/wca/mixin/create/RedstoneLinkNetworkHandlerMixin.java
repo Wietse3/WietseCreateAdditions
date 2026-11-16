@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class RedstoneLinkNetworkHandlerMixin {
 
     @Inject(method = "addToNetwork", at = @At("HEAD"), cancellable = true)
-    private void addToNetwork(LevelAccessor world, IRedstoneLinkable actor, CallbackInfo ci) {
+    private void wca$addToNetwork(LevelAccessor world, IRedstoneLinkable actor, CallbackInfo ci) {
         if (BrassLinkBridgeManager.add(world, actor))
             ci.cancel();
     }

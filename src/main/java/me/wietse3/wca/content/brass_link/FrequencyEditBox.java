@@ -1,7 +1,6 @@
 package me.wietse3.wca.content.brass_link;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.content.logistics.AddressEditBox;
 import com.simibubi.create.content.trains.schedule.DestinationSuggestions;
 import net.createmod.catnip.data.IntAttached;
 import net.minecraft.client.Minecraft;
@@ -19,13 +18,13 @@ import java.util.function.Consumer;
 
 public class FrequencyEditBox extends EditBox {
 
-    private DestinationSuggestions destinationSuggestions;
-    private Consumer<String> mainResponder;
+    private final DestinationSuggestions destinationSuggestions;
+    private final Consumer<String> mainResponder;
 
     public FrequencyEditBox(Screen screen, Font font, int x, int y, int width, int height,
                             boolean anchorToBottom, BlockPos pos) {
         this(screen, font, x, y, width, height, anchorToBottom,
-                BrassLinkBehavior.createSuggestions(Minecraft.getInstance().level, pos));
+                BrassLinkClientHandler.createSuggestions(Minecraft.getInstance().level, pos));
     }
 
     public FrequencyEditBox(Screen screen, Font font, int x, int y, int width, int height,

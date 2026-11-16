@@ -3,7 +3,7 @@ package me.wietse3.wca.content.brass_link.controller;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.gui.widget.ScrollInput;
-import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
+import me.wietse3.wca.content.brass_link.BrassLinkClientHandler;
 import me.wietse3.wca.content.brass_link.FrequencyEditBox;
 import me.wietse3.wca.registry.WCAGuiTextures;
 import me.wietse3.wca.util.ExtendedControlsUtil;
@@ -16,7 +16,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class BrassLinkedControllerScreen extends AbstractSimiScreen {
 
         List<IntAttached<String>> options = List.of();
         if (mc.player != null && mc.level != null) {
-            options = BrassLinkBehavior.createSuggestions(mc.level, mc.player.blockPosition());
+            options = BrassLinkClientHandler.createSuggestions(mc.level, mc.player.blockPosition());
         }
 
         List<BrassControllerBind> binds = BrassLinkedControllerItem.getFrequencies(heldItem);

@@ -4,12 +4,7 @@ import com.simibubi.create.content.equipment.clipboard.ClipboardCloneable;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
-import dev.ryanhcode.sable.companion.SableCompanion;
-import dev.ryanhcode.sable.companion.SubLevelAccess;
-import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import me.wietse3.wca.WietseCreateAdditions;
-import me.wietse3.wca.config.WCAConfigs;
-import net.createmod.catnip.data.IntAttached;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -17,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3d;
 
 import java.util.*;
 import java.util.function.IntConsumer;
@@ -26,8 +20,6 @@ import java.util.function.IntSupplier;
 public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLinkable, ClipboardCloneable {
 
     public static final BehaviourType<BrassLinkBehavior> TYPE = new BehaviourType<>();
-
-    private static final Set<BrassLinkBehavior> CLIENT_LINKS = new HashSet<>();
 
     enum Mode {
         TRANSMIT, RECEIVE
@@ -95,26 +87,22 @@ public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLin
     @Override
     public void initialize() {
         super.initialize();
-        if (getWorld().isClientSide) {
-            CLIENT_LINKS.add(this);
+        if (getWorld().isClientSide)
             return;
-        }
         getHandler().addToNetwork(getWorld(), this);
         newPosition = true;
     }
 
     @Override
-    public String getNetworkKey() {
+    public String getFrequency() {
         return frequency;
     }
 
     @Override
     public void unload() {
         super.unload();
-        if (getWorld().isClientSide) {
-            CLIENT_LINKS.remove(this);
+        if (getWorld().isClientSide)
             return;
-        }
         getHandler().removeFromNetwork(getWorld(), this);
     }
 
@@ -210,43 +198,6 @@ public class BrassLinkBehavior extends BlockEntityBehaviour implements IBrassLin
             return false;
         setFrequency(tag.getString("Frequency"));
         return true;
-    }
-
-    public static List<IntAttached<String>> createSuggestions(Level level, BlockPos blockPos) {
-        List<IntAttached<String>> frequencies = new ArrayList<>();
-
-        Vector3d pos = JOMLConversion.atCenterOf(blockPos);
-        SubLevelAccess playerSublevel = SableCompanion.INSTANCE.getContaining(level, pos);
-        if (playerSublevel != null)
-            playerSublevel.logicalPose().transformPosition(pos);
-
-        int linkRange = WCAConfigs.server().links.linkRange.get();
-        Map<String, Integer> nearest = new HashMap<>();
-
-        for (BrassLinkBehavior link : CLIENT_LINKS) {
-            String frequency = link.getNetworkKey();
-            if (frequency.isBlank())
-                continue;
-
-            Vector3d linkPos = JOMLConversion.atCenterOf(link.getLocation());
-            SubLevelAccess linkSublevel = SableCompanion.INSTANCE.getContaining(level, linkPos);
-            if (linkSublevel != null)
-                linkSublevel.logicalPose().transformPosition(linkPos);
-
-            double distance = pos.distanceSquared(linkPos);
-            if (distance >= linkRange * linkRange)
-                continue;
-
-            nearest.merge(frequency, (int) distance, Math::min);
-        }
-
-        for (Map.Entry<String, Integer> entry : nearest.entrySet())
-            frequencies.add(IntAttached.with(entry.getValue(), entry.getKey()));
-        return frequencies;
-    }
-
-    public static void clearClientLinks() {
-        CLIENT_LINKS.clear();
     }
 
 }

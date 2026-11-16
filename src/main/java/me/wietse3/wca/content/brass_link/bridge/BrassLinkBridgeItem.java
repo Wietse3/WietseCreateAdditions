@@ -71,7 +71,7 @@ public class BrassLinkBridgeItem extends Item implements SupportsItemCopying {
             return InteractionResult.PASS;
 
         ItemStack stack = context.getItemInHand();
-        setFrequency(stack, link.getNetworkKey());
+        setFrequency(stack, link.getFrequency());
 
         return InteractionResult.SUCCESS;
     }

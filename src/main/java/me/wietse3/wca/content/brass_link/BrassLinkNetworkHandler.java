@@ -1,7 +1,6 @@
 package me.wietse3.wca.content.brass_link;
 
 import dev.ryanhcode.sable.companion.SableCompanion;
-import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.JOMLConversion;
 import me.wietse3.wca.WietseCreateAdditions;
 import me.wietse3.wca.config.WCAConfigs;
@@ -32,7 +31,7 @@ public class BrassLinkNetworkHandler {
 
     public Set<IBrassLinkable> getNetworkOf(LevelAccessor world, IBrassLinkable actor) {
         Map<String, Set<IBrassLinkable>> networksInWorld = networksIn(world);
-        String key = actor.getNetworkKey();
+        String key = actor.getFrequency();
         if (!networksInWorld.containsKey(key))
             networksInWorld.put(key, new LinkedHashSet<>());
         return networksInWorld.get(key);
@@ -47,7 +46,7 @@ public class BrassLinkNetworkHandler {
         Set<IBrassLinkable> network = getNetworkOf(world, actor);
         network.remove(actor);
         if (network.isEmpty()) {
-            networksIn(world).remove(actor.getNetworkKey());
+            networksIn(world).remove(actor.getFrequency());
             return;
         }
         updateNetworkOf(world, actor);
@@ -86,26 +85,17 @@ public class BrassLinkNetworkHandler {
         }
     }
 
-    public static boolean withinRange(IBrassLinkable from, IBrassLinkable to, LevelAccessor levelAccessor) {
-        Level level = (Level) levelAccessor;
-
-        if (from == to) return true;
+    public static boolean withinRange(IBrassLinkable from, IBrassLinkable to, LevelAccessor world) {
+        if (from == to)
+            return true;
 
         Vector3d fromPos = JOMLConversion.atCenterOf(from.getLocation());
         Vector3d toPos = JOMLConversion.atCenterOf(to.getLocation());
-
-        SubLevelAccess fromSublevel = SableCompanion.INSTANCE.getContaining(level, fromPos);
-        if (fromSublevel != null) {
-            fromSublevel.logicalPose().transformPosition(fromPos);
-        }
-
-        SubLevelAccess toSublevel = SableCompanion.INSTANCE.getContaining(level, toPos);
-        if (toSublevel != null) {
-            toSublevel.logicalPose().transformPosition(toPos);
-        }
-
         int linkRange = WCAConfigs.server().links.linkRange.get();
-        return fromPos.distanceSquared(toPos) < linkRange * linkRange;
+
+        return SableCompanion.INSTANCE.distanceSquaredWithSubLevels(
+                (Level) world, fromPos, toPos
+        ) < (double) linkRange * linkRange;
     }
 
     public Map<String, Set<IBrassLinkable>> networksIn(LevelAccessor world) {

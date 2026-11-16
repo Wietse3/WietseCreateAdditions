@@ -1,19 +1,21 @@
 package me.wietse3.wca.content.brass_link;
 
-import net.minecraft.core.BlockPos;
+import com.simibubi.create.content.redstone.link.IRedstoneLinkable;
+import com.simibubi.create.content.redstone.link.RedstoneLinkNetworkHandler.Frequency;
+import me.wietse3.wca.content.brass_link.bridge.BrassLinkBridgeItem;
+import me.wietse3.wca.registry.WCAItems;
+import net.createmod.catnip.data.Couple;
+import net.minecraft.world.item.ItemStack;
 
-public interface IBrassLinkable {
+public interface IBrassLinkable extends IRedstoneLinkable {
 
-    public int getTransmittedStrength();
+    String getFrequency();
 
-    public void setReceivedStrength(int power);
+    @Override
+    default Couple<Frequency> getNetworkKey() {
+        ItemStack bridgeItem = WCAItems.BRASS_LINK_BRIDGE.asStack();
+        BrassLinkBridgeItem.setFrequency(bridgeItem, getFrequency());
 
-    public boolean isListening();
-
-    public boolean isAlive();
-
-    public String getNetworkKey();
-
-    public BlockPos getLocation();
-
+        return Couple.create(Frequency.of(bridgeItem), Frequency.EMPTY);
+    }
 }

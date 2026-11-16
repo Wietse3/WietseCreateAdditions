@@ -22,8 +22,20 @@ public class BrassLinkBridge implements IBrassLinkable {
         if (WCAConfigs.server().links.bridgeBlacklist.get().contains(BuiltInRegistries.BLOCK.getKey(block).toString()))
             return false;
 
-        return getFrequency(link.getNetworkKey().getFirst().getStack()) != null
-                || getFrequency(link.getNetworkKey().getSecond().getStack()) != null;
+        return getItemFreq(link.getNetworkKey().getFirst().getStack()) != null
+                || getItemFreq(link.getNetworkKey().getSecond().getStack()) != null;
+    }
+
+    public static String getFrequencyFrom(IRedstoneLinkable link) {
+        if (link instanceof IBrassLinkable brassLink)
+            return brassLink.getFrequency();
+
+        String frequency = getItemFreq(link.getNetworkKey().getFirst().getStack());
+        if (frequency != null)
+            return frequency;
+
+        frequency = getItemFreq(link.getNetworkKey().getSecond().getStack());
+        return frequency != null ? frequency : "";
     }
 
     @Override
@@ -47,13 +59,8 @@ public class BrassLinkBridge implements IBrassLinkable {
     }
 
     @Override
-    public String getNetworkKey() {
-        String frequency = getFrequency(link.getNetworkKey().getFirst().getStack());
-        if (frequency != null)
-            return frequency;
-
-        frequency = getFrequency(link.getNetworkKey().getSecond().getStack());
-        return frequency != null ? frequency : "";
+    public String getFrequency() {
+        return getFrequencyFrom(link);
     }
 
     @Override
@@ -61,13 +68,9 @@ public class BrassLinkBridge implements IBrassLinkable {
         return link.getLocation();
     }
 
-    private static String getFrequency(ItemStack stack) {
-        if (!stack.isEmpty() && stack.getItem() instanceof BrassLinkBridgeItem) {
-            String frequency = BrassLinkBridgeItem.getFrequency(stack);
-            if (frequency.isBlank())
-                return null;
-            return frequency;
-        }
+    private static String getItemFreq(ItemStack stack) {
+        if (!stack.isEmpty() && stack.getItem() instanceof BrassLinkBridgeItem)
+            return BrassLinkBridgeItem.getFrequency(stack);
         return null;
     }
 

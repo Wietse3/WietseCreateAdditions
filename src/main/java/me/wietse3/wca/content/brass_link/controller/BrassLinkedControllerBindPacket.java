@@ -39,7 +39,7 @@ public class BrassLinkedControllerBindPacket extends BrassLinkedControllerPacket
         if (link == null)
             return;
 
-        binds.set(button, new BrassControllerBind(link.getNetworkKey()));
+        binds.set(button, new BrassControllerBind(link.getFrequency()));
         heldItem.set(WCADataComponents.BRASS_LINKED_CONTROLLER_LINKS, binds);
     }
 

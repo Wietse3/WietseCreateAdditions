@@ -8,6 +8,7 @@
     "copycats.CopycatBlockMixin",
     "copycats.LinkRendererMixin",
     "copycats.ValueBoxTransformMixin",
+    "create.BlockEntityBehaviourMixin",
     "create.GirderBlockMixin",
     "create.GirderCTBehaviourMixin",
     "create.RedstoneLinkNetworkHandlerMixin",

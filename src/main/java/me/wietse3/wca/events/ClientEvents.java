@@ -1,7 +1,7 @@
 package me.wietse3.wca.events;
 
 import me.wietse3.wca.WietseCreateAdditions;
-import me.wietse3.wca.content.brass_link.BrassLinkBehavior;
+import me.wietse3.wca.content.brass_link.BrassLinkClientHandler;
 import me.wietse3.wca.content.brass_link.controller.BrassLinkedControllerClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,7 +24,7 @@ public class ClientEvents {
     public static void onTickPre(ClientTickEvent.Pre event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != lastLevel) {
-            BrassLinkBehavior.clearClientLinks();
+            BrassLinkClientHandler.clear();
             lastLevel = mc.level;
         }
 

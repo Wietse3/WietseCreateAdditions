@@ -1,6 +1,7 @@
 package me.wietse3.wca.content.brass_link;
 
 import com.simibubi.create.foundation.networking.BlockEntityConfigurationPacket;
+import me.wietse3.wca.config.WCAConfigs;
 import me.wietse3.wca.registry.WCAPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,7 +25,7 @@ public class BrassLinkConfigurePacket extends BlockEntityConfigurationPacket<Bra
     public BrassLinkConfigurePacket(BlockPos pos, String frequency, boolean inverted) {
         super(pos);
         this.frequency = frequency.strip();
-        this.inverted = inverted;
+        this.inverted = inverted && WCAConfigs.server().links.allowInvertMode.get();
     }
 
     @Override

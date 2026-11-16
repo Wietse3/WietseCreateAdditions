@@ -19,7 +19,7 @@ public class BrassRedstoneLinkRenderer extends SmartBlockEntityRenderer<BrassRed
         if (behavior == null)
             return;
 
-        String frequency = behavior.getNetworkKey();
+        String frequency = behavior.getFrequency();
         if (!frequency.isEmpty()) {
             renderNameplateOnHover(be, Component.literal(frequency), 0.5f, ms, buffer, light);
         }

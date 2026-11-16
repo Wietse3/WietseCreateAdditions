@@ -115,7 +115,7 @@ public class BrassLinkedControllerServerHandler {
         }
 
         @Override
-        public String getNetworkKey() {
+        public String getFrequency() {
             return getSecond();
         }
 

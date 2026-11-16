@@ -9,20 +9,20 @@ import java.util.Map;
 
 public class BrassLinkBridgeManager {
 
-    private static final Map<IRedstoneLinkable, BrassLinkBridge> BRIDGES = new IdentityHashMap<>();
+    private static final Map<IRedstoneLinkable, BrassLinkBridge> bridges = new IdentityHashMap<>();
 
     public static boolean add(LevelAccessor world, IRedstoneLinkable link) {
         if (!BrassLinkBridge.canBridge(world, link))
             return false;
 
-        BrassLinkBridge bridge = BRIDGES.computeIfAbsent(link, BrassLinkBridge::new);
+        BrassLinkBridge bridge = bridges.computeIfAbsent(link, BrassLinkBridge::new);
         WietseCreateAdditions.BRASS_LINK_NETWORK_HANDLER.addToNetwork(world, bridge);
 
         return true;
     }
 
     public static void remove(LevelAccessor world, IRedstoneLinkable link) {
-        BrassLinkBridge bridge = BRIDGES.remove(link);
+        BrassLinkBridge bridge = bridges.remove(link);
         if (bridge == null)
             return;
 
@@ -30,11 +30,11 @@ public class BrassLinkBridgeManager {
     }
 
     public static BrassLinkBridge get(IRedstoneLinkable link) {
-        return BRIDGES.get(link);
+        return bridges.get(link);
     }
 
     public static boolean contains(IRedstoneLinkable link) {
-        return BRIDGES.containsKey(link);
+        return bridges.containsKey(link);
     }
 
 }
