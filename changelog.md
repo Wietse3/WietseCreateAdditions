@@ -1,2 +1,3 @@
-- Bridges now show up in suggestions.
-- Some config changes.
+- Fixed copycat redstone link missing from bridge blacklist.
+- Bridge frequency now displays in redstone link frequency slot hover tip.
+- Added bridge frequency copying in ghost inventories.

@@ -6,11 +6,12 @@
   "mixins": [
     "copycats.CopycatBlockEntityMixin",
     "copycats.CopycatBlockMixin",
-    "copycats.LinkRendererMixin",
     "copycats.ValueBoxTransformMixin",
     "create.BlockEntityBehaviourMixin",
+    "create.GhostItemMenuMixin",
     "create.GirderBlockMixin",
     "create.GirderCTBehaviourMixin",
+    "create.LinkRendererMixin",
     "create.RedstoneLinkNetworkHandlerMixin",
     "create.ShaftBlockMixin"
   ],

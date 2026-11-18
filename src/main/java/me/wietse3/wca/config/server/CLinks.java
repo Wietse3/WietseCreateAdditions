@@ -7,7 +7,7 @@ import java.util.List;
 public class CLinks extends WCAConfigBase {
 
     public final ConfigStringList bridgeBlacklist = sl("bridgeBlacklist",
-            List.of("create:redstone_link"), Comments.bridgeBlacklist);
+            List.of("create:redstone_link", "wca:copycat_redstone_link"), Comments.bridgeBlacklist);
     public final ConfigEnum<CopycatLinkSetting> copycatLinkInteraction =
             e(CopycatLinkSetting.BOTH, "copycatLinkInteraction", Comments.copycatLinkInteraction);
 
